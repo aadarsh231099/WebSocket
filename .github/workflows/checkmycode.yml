@@ -1,0 +1,10 @@
+name: Check my code
+
+on: [push,pull_request]
+
+jobs:
+  call-checkmycode:
+    uses: ncmsdev/numo-builder/.github/workflows/checkmycode.yml@main
+    secrets:
+      ORG_NPM_INSTALL: ${{ secrets.ORG_NPM_INSTALL }}
+
