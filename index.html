@@ -1,0 +1,86 @@
+<html>
+   <head>
+   <style>
+       #wishing-well {
+           position: relative;
+           width: 400px;
+           height: 300px;
+           margin: 50px;
+           outline: solid 1px black;
+       }
+   </style>
+   <script>
+       const webSocket = new WebSocket('ws://localhost:443/');
+       let el;
+ 
+       function fade(element) {
+           var op = 1;  // initial opacity
+           var timer = setInterval(function () {
+               if (op <= 0.1){
+                   clearInterval(timer);
+                   element.style.display = 'none';
+               }
+               element.style.opacity = op;
+               element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+               op -= op * 0.1;
+           }, 100);
+       }
+ 
+       function unfade(element) {
+           var op = 0.1;  // initial opacity
+           element.style.display = 'block';
+           var timer = setInterval(function () {
+               if (op >= 1){
+                   clearInterval(timer);
+               }
+               element.style.opacity = op;
+               element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+               op += op * 0.1;
+           }, 100);
+       }
+ 
+       webSocket.onmessage = (event) => {
+           const data = JSON.parse(event.data);
+           if (data.type == 'time') {
+               el = document.getElementById('time');
+               el.innerHTML = 'Time on the Server: ' + data.time;
+           }
+           if (data.type == 'message') {
+               // Grab the wishing-well
+               const palette = document.getElementById('wishing-well');
+ 
+               // create new div with position and innerHtml
+               let msgContainer = document.createElement("div");
+               msgContainer.id = "message"
+               msgContainer.style.position = "absolute";
+               console.log("position: ", data.position)
+               msgContainer.style.top = data.position.y + "px";
+               msgContainer.style.left = data.position.x + "px";
+               msgContainer.style.opacity = 0;
+               msgContainer.innerHTML = data.message;
+ 
+               // add the new div to wishing-well
+               palette.appendChild(msgContainer);
+               unfade(msgContainer)
+ 
+               // fire off fade/delete new div with a delay in the beginning
+               async function fadeAndDelete() {
+                   setTimeout(() => {
+                       fade(msgContainer);
+                       setTimeout(() => {
+                           let elem = document.getElementById("message");
+                           elem.remove();
+                       }, 1100)
+                   }, 4000);
+               }
+              
+               fadeAndDelete();
+           }
+       };
+   </script>
+   </head>
+   <body>
+       <p id="time"></p>
+       <div id="wishing-well"></div>
+   </body>
+</html>
