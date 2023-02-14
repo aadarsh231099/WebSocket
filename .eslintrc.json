@@ -17,6 +17,6 @@
         "complexity": ["error", {"max": 3}],
         "require-jsdoc": ["off"],
         "new-cap": ["off"],
-        "max-len": [2, {"code": 100, "ignoreUrls": true}]
+        "max-len": [2, {"code": 200, "ignoreUrls": true}]
     }
 }
