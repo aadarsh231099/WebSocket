@@ -8,6 +8,7 @@ GATEDIR=$(dirname "$0")/gates
 sh "$GATEDIR/js-lint.sh"
 sh "$GATEDIR/no-dups.sh" --ignore "**/*.json"
 npm audit
+sh "$GATEDIR/js-test.sh"
 
 
 echo Check Complete :\)
