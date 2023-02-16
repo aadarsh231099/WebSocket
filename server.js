@@ -1,28 +1,33 @@
-const { Server } = require('ws');
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 3000 });
+
+
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+        
+
+        ws.on('message', (message)=>{
+            console.log(`Received message: ${message}`);
+            const json = JSON.parse(message);
+
+
+            const response = [
+                2,
+                json[1],
+                {
+                  status: 'Accepted',
+                  currentTime: new Date().toISOString(),
+                  heartbeatInterval: 300,
+                },
+              ];
+
+      
+        ws.send(JSON.stringify(response));
+        console.log(`Sent message: ${JSON.stringify(response)}`);
+         });
  
-const sockserver = new Server({ port: 3000, host: 'localhost' });
-
-sockserver.on('connection', (ws) => {
-   console.log('New client connected!'); 
-   
-   ws.on('close', () => console.log('Client has disconnected!'));
-
-   const response = JSON.stringify({status: 'Accepted',
-       currentTime: new Date().toISOString(),
-       heartbeatInterval: 300});
-
-   ws.on('message', function message(){
-      sockserver.clients.forEach(function each(client){
-         if(client){
-            client.send(response);
-         }
-      });
-   });
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
 });
-
-
-
-
-
-
-
