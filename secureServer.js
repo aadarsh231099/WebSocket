@@ -1,10 +1,12 @@
 const WebSocket = require('ws');
 const fs = require('fs');
+const path = require('path');
 
 const server = {
-  cert: fs.readFileSync('C:\\Users\\91808\\Desktop\\Numo\\WebSocket\\cert.pem'),
-  key: fs.readFileSync('C:\\Users\\91808\\Desktop\\Numo\\WebSocket\\key.pem')
+  cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
+  key: fs.readFileSync(path.join(__dirname, 'key.pem'))
 };
+
 
 const wss = new WebSocket.Server({ port: 3000, serverOptions: server });
 
