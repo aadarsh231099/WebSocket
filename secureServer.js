@@ -8,10 +8,7 @@ const options = {
 };
 
 
-const server = https.createServer(options, (req, res) => {
-  res.writeHead(200);
-  res.end('Hello, world!');
-});
+const server = https.createServer(options);
 
 const wss = new WebSocket.Server({ server });
 
