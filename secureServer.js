@@ -1,14 +1,19 @@
 const WebSocket = require('ws');
 const fs = require('fs');
-const path = require('path');
+const https = require('https');
 
-const server = {
-  cert: fs.readFileSync(path.join(__dirname, 'cert.pem')),
-  key: fs.readFileSync(path.join(__dirname, 'key.pem'))
+const options = {
+  cert: fs.readFileSync('C:\\Users\\91808\\Desktop\\Numo\\WebSocket\\cert.pem'),
+  key: fs.readFileSync('C:\\Users\\91808\\Desktop\\Numo\\WebSocket\\key.pem')
 };
 
 
-const wss = new WebSocket.Server({ port: 3000, serverOptions: server });
+const server = https.createServer(options, (req, res) => {
+  res.writeHead(200);
+  res.end('Hello, world!');
+});
+
+const wss = new WebSocket.Server({ server });
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
@@ -35,4 +40,9 @@ wss.on('connection', (ws) => {
     console.log('Client disconnected');
   });
 });
+
+server.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+
 
